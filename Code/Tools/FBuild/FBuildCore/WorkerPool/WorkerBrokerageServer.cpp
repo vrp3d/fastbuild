@@ -96,7 +96,12 @@ void WorkerBrokerageServer::SetAvailability( bool available )
                 {
                     m_HostName = hostName;
                     m_DomainName = domainName;
-                    m_IPAddress = ipAddress;
+                    AStackString<> ipEnv;
+                    if ( Env::GetEnvVariable( "FASTBUILD_WORKER_IP_ADDRESS", ipEnv ) )
+                    {
+                        //Env::ShowMsgBox( "FASTBUILD_WORKER_IP_ADDRESS", ipEnv.Get() );
+                    }
+                    m_IPAddress = ipEnv == "" ? ipAddress : ipEnv;
 
                     // Remove existing brokerage file, as filename is being updated
                     FileIO::FileDelete( m_BrokerageFilePath.Get() );
